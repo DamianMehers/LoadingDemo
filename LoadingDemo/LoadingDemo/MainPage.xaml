@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:shared="clr-namespace:LoadingDemo.Shared;assembly=LoadingDemo.Shared"
+             BindingContext="{x:Static shared:Locator.MyViewModel}"
+             x:Class="LoadingDemo.MainPage">
+  <!-- Use an absolute layout to overlay one control over another -->
+  <AbsoluteLayout>
+    <ActivityIndicator
+      IsRunning="{Binding Loading}" HorizontalOptions="Center"
+      VerticalOptions="Center"
+      IsVisible="{Binding Loading}" AbsoluteLayout.LayoutBounds="0,0,1,1"
+      AbsoluteLayout.LayoutFlags="All" x:Name="ActivityIndicator" />
+    <StackLayout Orientation="Vertical"
+                 AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
+      <StackLayout.Resources>
+        <ResourceDictionary>
+          <Style TargetType="View" x:Key="MyBase">
+            <!-- Disable controls when the activity indicator is running -->
+            <Style.Triggers>
+              <DataTrigger
+                TargetType="View"
+                Binding="{Binding Source={x:Reference ActivityIndicator}, Path=IsRunning}"
+                Value="True">
+                <Setter Property="IsEnabled" Value="False" />
+              </DataTrigger>
+            </Style.Triggers>
+          </Style>
+          <!-- Define implicit styles for each control we use. -->
+          <Style TargetType="Label" BasedOn="{StaticResource MyBase}" />
+          <Style TargetType="Entry" BasedOn="{StaticResource MyBase}" />
+          <Style TargetType="Button" BasedOn="{StaticResource MyBase}" />
+        </ResourceDictionary>
+      </StackLayout.Resources>
+      <Label Text="My Label" HorizontalOptions="Center" />
+      <Entry Placeholder="Enter text here" />
+      <Entry Placeholder="Enter text here" />
+      <Entry Placeholder="Enter text here" />
+      <Button Text="Click Me" Command="{Binding StartCommand}" HorizontalOptions="Center" />
+    </StackLayout>
+  </AbsoluteLayout>
+</ContentPage>
